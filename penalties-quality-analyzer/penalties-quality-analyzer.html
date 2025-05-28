@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analýza oprav penalizací</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .file-input {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            text-align: center;
+            transition: all 0.3s;
+            background: #f9f9f9;
+        }
+        .file-input:hover {
+            border-color: #999;
+            background: #f0f0f0;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        button, .file-label {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        button:hover, .file-label:hover {
+            background: #2980b9;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .status.info {
+            background: #e0f7fa;
+            color: #006064;
+        }
+        .status.success {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+        .status.error {
+            background: #ffebee;
+            color: #b71c1c;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: #3498db;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .results-table th, .results-table td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            text-align: center;
+        }
+        .results-table th {
+            background: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        .results-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .results-table tr:hover {
+            background: #f0f0f0;
+        }
+        .race-row td {
+            font-weight: normal;
+        }
+        .segment-row td {
+            background: #e8f4f8;
+            font-weight: bold;
+        }
+        .gate-cell {
+            position: relative;
+        }
+        .gate-highlight {
+            background-color: #ffecb3;
+        }
+        .copy-button {
+            margin: 20px 0;
+        }
+        .table-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        /* Barevná škála pro počet oprav */
+        .level-0 { background-color: #ffffff; }
+        .level-1 { background-color: #fff9c4; }
+        .level-2 { background-color: #ffecb3; }
+        .level-3 { background-color: #ffcc80; }
+        .level-4 { background-color: #ffab91; }
+        .level-5 { background-color: #ff8a65; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analýza oprav penalizací kanoistických závodů</h1>
+        
+        <div class="file-input" id="dropZone">
+            <label for="xmlFile" class="file-label">Vybrat soubor</label>
+            <input type="file" id="xmlFile" accept=".xml">
+            <p>nebo přetáhněte soubor sem</p>
+        </div>
+        
+        <div id="uploadStatus" class="status"></div>
+        
+        <div id="results" style="display: none;">
+            <h2>Výsledky analýzy</h2>
+            <p>Počet detekovaných ex-post oprav podle branek a závodů</p>
+            
+            <button id="copyToClipboard" class="copy-button">Kopírovat tabulku do schránky</button>
+            <div class="table-container">
+                <table id="resultsTable" class="results-table">
+                    <!-- Tabulka bude naplněna dynamicky -->
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Globální proměnné
+        let xmlData = null;
+        let parsedData = {
+            results: [],
+            courseConfigs: {},
+            scheduleInfo: {}
+        };
+        
+        // DOM elementy
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('xmlFile');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const resultsDiv = document.getElementById('results');
+        const resultsTable = document.getElementById('resultsTable');
+        
+        // Event listenery pro nahrávání souborů
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            dropZone.style.borderColor = '#3498db';
+            dropZone.style.background = '#e6f7ff';
+        }
+        
+        function unhighlight() {
+            dropZone.style.borderColor = '#ccc';
+            dropZone.style.background = '#f9f9f9';
+        }
+        
+        dropZone.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        }
+        
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                handleFile(this.files[0]);
+            }
+        });
+        
+        // Zpracování souboru
+        function handleFile(file) {
+            if (!file) return;
+            
+            if (file.type !== 'text/xml' && !file.name.endsWith('.xml')) {
+                uploadStatus.textContent = 'Chyba: Je možné nahrát pouze XML soubory.';
+                uploadStatus.className = 'status error';
+                return;
+            }
+            
+            uploadStatus.innerHTML = `<div class="loading"></div> Načítání souboru...`;
+            uploadStatus.className = 'status info';
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    xmlData = e.target.result;
+                    parseXmlData(xmlData);
+                    uploadStatus.textContent = `Soubor ${file.name} byl úspěšně načten.`;
+                    uploadStatus.className = 'status success';
+                    
+                    // Analyzovat data a zobrazit výsledky
+                    analyzeAndDisplayResults();
+                } catch (error) {
+                    console.error('Chyba při zpracování souboru:', error);
+                    uploadStatus.textContent = `Chyba při zpracování: ${error.message}`;
+                    uploadStatus.className = 'status error';
+                }
+            };
+            
+            reader.onerror = function() {
+                uploadStatus.textContent = `Chyba při čtení souboru.`;
+                uploadStatus.className = 'status error';
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // Parsování XML dat
+        function parseXmlData(xmlContent) {
+            try {
+                // Vytvoření DOM objektu z XML
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+                
+                // Kontrola chyby parsování
+                const errorNode = xmlDoc.querySelector("parsererror");
+                if (errorNode) {
+                    throw new Error("Chyba při parsování XML");
+                }
+                
+                // Extrakce výsledků
+                const resultsNodes = xmlDoc.getElementsByTagName('Results');
+                
+                // Extrakce konfigurace tratí
+                const courseDataNodes = xmlDoc.getElementsByTagName('CourseData');
+                const courseConfigs = {};
+                
+                for (let i = 0; i < courseDataNodes.length; i++) {
+                    const courseNr = courseDataNodes[i].getElementsByTagName('CourseNr')[0]?.textContent;
+                    const config = courseDataNodes[i].getElementsByTagName('CourseConfig')[0]?.textContent;
+                    
+                    if (courseNr && config) {
+                        courseConfigs[courseNr] = config;
+                    }
+                }
+                
+                // Zpracování výsledků
+                const results = [];
+                
+                for (let i = 0; i < resultsNodes.length; i++) {
+                    const raceId = resultsNodes[i].getElementsByTagName('RaceId')[0]?.textContent;
+                    const id = resultsNodes[i].getElementsByTagName('Id')[0]?.textContent;
+                    const dtStart = resultsNodes[i].getElementsByTagName('dtStart')[0]?.textContent;
+                    const dtFinish = resultsNodes[i].getElementsByTagName('dtFinish')[0]?.textContent;
+                    
+                    // Kontrola, zda máme GateTimes a Gates
+                    const gateTimesNode = resultsNodes[i].getElementsByTagName('GateTimes')[0];
+                    const gatesNode = resultsNodes[i].getElementsByTagName('Gates')[0];
+                    
+                    if (raceId && dtStart && dtFinish && gateTimesNode && gatesNode) {
+                        const gates = gatesNode.textContent.trim().split(/\s+/).filter(Boolean);
+                        const gateTimes = gateTimesNode.textContent.split(';').filter(Boolean);
+                        
+                        results.push({
+                            raceId,
+                            id,
+                            dtStart,
+                            dtFinish,
+                            gates,
+                            gateTimes
+                        });
+                    }
+                }
+                
+                // Extrakce rozvrhu (Schedule) pro získání informací o tratích
+                const scheduleNodes = xmlDoc.getElementsByTagName('Schedule');
+                const scheduleInfo = {};
+                
+                for (let i = 0; i < scheduleNodes.length; i++) {
+                    const raceId = scheduleNodes[i].getElementsByTagName('RaceId')[0]?.textContent;
+                    
+                    if (raceId && raceId !== '<unassigned>') {
+                        const courseNr = scheduleNodes[i].getElementsByTagName('CourseNr')[0]?.textContent;
+                        const customTitle = scheduleNodes[i].getElementsByTagName('CustomTitle')[0]?.textContent;
+                        const classId = scheduleNodes[i].getElementsByTagName('ClassId')[0]?.textContent;
+                        
+                        if (courseNr) {
+                            scheduleInfo[raceId] = {
+                                courseNr,
+                                customTitle: customTitle || raceId,
+                                classId: classId || ''
+                            };
+                        }
+                    }
+                }
+                
+                // Uložení zparsovaných dat
+                parsedData = {
+                    results,
+                    courseConfigs,
+                    scheduleInfo
+                };
+                
+                return true;
+            } catch (error) {
+                console.error('Chyba při parsování XML:', error);
+                throw error;
+            }
+        }
+        
+        // Analýza dat a zobrazení výsledků
+        function analyzeAndDisplayResults() {
+            // Získat všechny dostupné RaceId
+            const allRaceIds = parsedData.results.map(result => result.raceId);
+            const uniqueRaceIds = [...new Set(allRaceIds)].sort();
+            
+            // Získat maximální počet branek
+            let maxGates = 0;
+            parsedData.results.forEach(result => {
+                if (result.gates.length > maxGates) {
+                    maxGates = result.gates.length;
+                }
+            });
+            
+            // Mapování RaceId na informace o trati
+            const raceCourseMappings = {};
+            for (const raceId of uniqueRaceIds) {
+                if (parsedData.scheduleInfo[raceId]) {
+                    raceCourseMappings[raceId] = parsedData.scheduleInfo[raceId].courseNr;
+                }
+            }
+            
+            // Struktura pro uložení výsledků analýzy
+            const analysisResults = {};
+            
+            // Analýza pro každý RaceId
+            for (const raceId of uniqueRaceIds) {
+                const courseNr = raceCourseMappings[raceId];
+                const courseConfig = parsedData.courseConfigs[courseNr] || '';
+                
+                // Získání všech jízd pro tento RaceId
+                const racesOfType = parsedData.results.filter(result => result.raceId === raceId);
+                
+                // Příprava pole pro uložení počtu ex-post oprav pro každou branku
+                const gateEdits = Array(maxGates).fill(0);
+                
+                // Identifikace segmentů
+                const segments = [];
+                let currentSegment = [];
+                let segmentIndex = 0;
+                
+                if (courseConfig) {
+                    for (let i = 0; i < courseConfig.length; i++) {
+                        if (courseConfig[i] === 'S') {
+                            if (currentSegment.length > 0) {
+                                segments.push({
+                                    gates: currentSegment,
+                                    index: segmentIndex
+                                });
+                                currentSegment = [];
+                                segmentIndex++;
+                            }
+                        } else {
+                            currentSegment.push({
+                                type: courseConfig[i],
+                                gateIndex: i
+                            });
+                        }
+                    }
+                    
+                    // Přidání posledního segmentu, pokud existuje
+                    if (currentSegment.length > 0) {
+                        segments.push({
+                            gates: currentSegment,
+                            index: segmentIndex
+                        });
+                    }
+                }
+                
+                // Analýza každé jízdy pro tento RaceId
+                racesOfType.forEach(race => {
+                    const { dtStart, dtFinish, gates, gateTimes } = race;
+                    
+                    // Převod časů na milisekundy od půlnoci
+                    const startTimeMs = timeToMilliseconds(dtStart);
+                    const finishTimeMs = timeToMilliseconds(dtFinish);
+                    
+                    // Převod časů branek na milisekundy
+                    const gateTimeValues = gateTimes.map(time => parseInt(time, 10));
+                    
+                    // Zjištění, zda čas zadání je mimo interval jízdy nebo výrazně odlišný
+                    for (let i = 0; i < gateTimeValues.length && i < gates.length; i++) {
+                        const gateTimeMs = gateTimeValues[i];
+                        
+                        // Kontrola, zda je čas mimo interval jízdy
+                        // Přidáváme malou toleranci (30 sekund) pro konec jízdy
+                        const isOutsideRaceTime = 
+                            gateTimeMs < startTimeMs - 5000 || // 5 sekund před startem
+                            gateTimeMs > finishTimeMs + 30000; // 30 sekund po dojezdu
+                        
+                        // Čas je výrazně odlišný od ostatních?
+                        let isSignificantlyDifferent = false;
+                        if (gateTimeValues.length > 1) {
+                            // Výpočet mediánu
+                            const sortedTimes = [...gateTimeValues].sort((a, b) => a - b);
+                            const median = sortedTimes[Math.floor(sortedTimes.length / 2)];
+                            
+                            // Je rozdíl větší než práh (10 minut = 600000 ms)?
+                            isSignificantlyDifferent = Math.abs(gateTimeMs - median) > 600000;
+                        }
+                        
+                        // Pokud je čas podezřelý, počítáme to jako ex-post opravu
+                        if (isOutsideRaceTime || isSignificantlyDifferent) {
+                            gateEdits[i]++;
+                        }
+                    }
+                });
+                
+                // Uložení výsledků analýzy
+                analysisResults[raceId] = {
+                    courseNr,
+                    courseConfig,
+                    gates: gateEdits,
+                    segments: segments,
+                    runsCount: racesOfType.length
+                };
+            }
+            
+            // Vytvoření tabulky
+            createResultsTable(analysisResults, maxGates);
+            
+            // Zobrazení výsledků
+            resultsDiv.style.display = 'block';
+            
+            // Event listener pro kopírování tabulky
+            document.getElementById('copyToClipboard').addEventListener('click', () => {
+                copyTableToClipboard(resultsTable);
+            });
+        }
+        
+        // Vytvoření tabulky s výsledky
+        function createResultsTable(analysisResults, maxGates) {
+            resultsTable.innerHTML = '';
+            
+            // Vytvoření záhlaví
+            const headerRow = document.createElement('tr');
+            
+            // Prázdná buňka pro první sloupec (RaceId)
+            headerRow.appendChild(document.createElement('th'));
+            
+            // Záhlaví pro každou branku
+            for (let i = 0; i < maxGates; i++) {
+                const th = document.createElement('th');
+                th.textContent = `${i + 1}`;
+                headerRow.appendChild(th);
+            }
+            
+            resultsTable.appendChild(headerRow);
+            
+            // Seřazení závodů podle typu (ST/HO) a dne
+            const sortedRaceIds = Object.keys(analysisResults).sort((a, b) => {
+                
+                const dayA = a.match(/_(\d+)$/)?.[1] || '';
+                const dayB = b.match(/_(\d+)$/)?.[1] || '';
+                
+                return dayA.localeCompare(dayB);
+            });
+            
+            // Vytvoření řádků pro každou jízdu
+            for (const raceId of sortedRaceIds) {
+                const raceData = analysisResults[raceId];
+                
+                // Řádek pro jízdu
+                const raceRow = document.createElement('tr');
+                raceRow.className = 'race-row';
+                
+                // První sloupec - RaceId
+                const raceIdCell = document.createElement('td');
+                raceIdCell.textContent = raceId;
+                raceRow.appendChild(raceIdCell);
+                
+                // Sloupce pro každou branku
+                for (let i = 0; i < maxGates; i++) {
+                    const td = document.createElement('td');
+                    td.className = 'gate-cell';
+                    
+                    if (i < raceData.gates.length) {
+                        const editCount = raceData.gates[i];
+                        if (editCount > 0) {
+                            td.textContent = editCount;
+                            
+                            // Barevné označení podle počtu oprav
+                            if (editCount === 1) td.classList.add('level-1');
+                            else if (editCount === 2) td.classList.add('level-2');
+                            else if (editCount === 3) td.classList.add('level-3');
+                            else if (editCount === 4) td.classList.add('level-4');
+                            else if (editCount >= 5) td.classList.add('level-5');
+                        } else {
+                            td.textContent = '';
+                            td.classList.add('level-0');
+                        }
+                    }
+                    
+                    raceRow.appendChild(td);
+                }
+                
+                resultsTable.appendChild(raceRow);
+                
+                // Prázdný řádek pro oddělení závodů
+                const emptyRow = document.createElement('tr');
+                const emptyCell = document.createElement('td');
+                emptyCell.colSpan = maxGates + 1;
+                emptyCell.style.height = '10px';
+                emptyCell.style.background = '#f5f5f5';
+                emptyRow.appendChild(emptyCell);
+                resultsTable.appendChild(emptyRow);
+            }
+        }
+        
+        // Kopírování tabulky do schránky
+        function copyTableToClipboard(table) {
+            let tsv = '';
+            
+            // Projít všechny řádky tabulky
+            for (let i = 0; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const rowData = [];
+                
+                // Projít všechny buňky v řádku
+                for (let j = 0; j < row.cells.length; j++) {
+                    rowData.push(row.cells[j].textContent);
+                }
+                
+                // Přidat řádek do TSV
+                tsv += rowData.join('\t') + '\n';
+            }
+            
+            // Kopírovat do schránky
+            navigator.clipboard.writeText(tsv)
+                .then(() => {
+                    alert('Tabulka byla zkopírována do schránky');
+                })
+                .catch(err => {
+                    console.error('Chyba při kopírování:', err);
+                    alert('Nepodařilo se zkopírovat tabulku do schránky');
+                });
+        }
+        
+        // Funkce pro převod časového formátu (HH:MM:SS.mmm) na milisekundy od půlnoci
+        function timeToMilliseconds(timeStr) {
+            if (!timeStr) return 0;
+            
+            const parts = timeStr.split(':');
+            if (parts.length < 3) return 0;
+            
+            const hours = parseInt(parts[0], 10);
+            const minutes = parseInt(parts[1], 10);
+            
+            let seconds = 0;
+            if (parts[2].includes('.')) {
+                const secParts = parts[2].split('.');
+                seconds = parseInt(secParts[0], 10);
+                const milliseconds = parseInt(secParts[1], 10);
+                seconds += milliseconds / 1000;
+            } else {
+                seconds = parseInt(parts[2], 10);
+            }
+            
+            return (hours * 3600 + minutes * 60 + seconds) * 1000;
+        }
+    </script>
+</body>
+</html>
