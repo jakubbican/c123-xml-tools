@@ -513,6 +513,12 @@
             });
         }
         
+        // Funkce pro odstranění přípony z ID
+        function normalizeId(id) {
+            // Odstraní vše za první tečkou (včetně tečky)
+            return id.split('.')[0];
+        }
+
         function parseXML(xmlContent, fileName) {
             try {
                 const parser = new DOMParser();
@@ -526,10 +532,10 @@
                 
                 // Zpracování účastníků (Participants)
                 xmlDoc.querySelectorAll('Participants').forEach(participant => {
-                    const id = participant.querySelector('Id')?.textContent;
+                    const id = normalizeId(participant.querySelector('Id')?.textContent);
                     if (id) {
                         parsedData.participants[id] = {
-                            id: id,
+                            id: normalizeId(id),
                             classId: participant.querySelector('ClassId')?.textContent,
                             eventBib: participant.querySelector('EventBib')?.textContent,
                             icfId: participant.querySelector('ICFId')?.textContent,
@@ -548,7 +554,7 @@
                 // Zpracování výsledků (Results)
                 xmlDoc.querySelectorAll('Results').forEach(result => {
                     const raceId = result.querySelector('RaceId')?.textContent;
-                    const id = result.querySelector('Id')?.textContent;
+                    const id = normalizeId(result.querySelector('Id')?.textContent);
                     
                     if (raceId && id) {
                         if (!parsedData.results[raceId]) {
@@ -556,18 +562,18 @@
                         }
                         
                         parsedData.results[raceId][id] = {
-                            id: id,
+                            id: normalizeId(id),
                             raceId: raceId,
                             startOrder: result.querySelector('StartOrder')?.textContent,
                             bib: result.querySelector('Bib')?.textContent,
                             status: result.querySelector('Status')?.textContent,
                             time: parseInt(result.querySelector('Time')?.textContent) || 0,
                             pen: parseInt(result.querySelector('Pen')?.textContent) || 0,
-                            total: parseInt(result.querySelector('Total')?.textContent) || 0,
+                            total: parseInt(result.querySelector('Total')?.textContent) || 999999,
                             totalBehind: result.querySelector('TotalBehind')?.textContent,
                             rnk: parseInt(result.querySelector('Rnk')?.textContent) || 999,
                             catRnk: parseInt(result.querySelector('CatRnk')?.textContent) || 999,
-                            totalTotal: parseInt(result.querySelector('TotalTotal')?.textContent) || 0,
+                            totalTotal: parseInt(result.querySelector('TotalTotal')?.textContent) || 999999,
                             totalRnk: parseInt(result.querySelector('TotalRnk')?.textContent) || 999,
                             totalCatRnk: parseInt(result.querySelector('TotalCatRnk')?.textContent) || 999,
                             catId: result.querySelector('CatId')?.textContent,
@@ -1004,7 +1010,8 @@
                 });
             });
         }
-        
+
+       
         function generateCombinedResults() {
             combinedResults = {};
             
@@ -1127,14 +1134,14 @@
                                     rank: rank1,
                                     catRank: catRank1,
                                     time: time1,
-                                    timeFormatted: time1 === 999999 && result1.missing ? '999' : formatTime(time1),
+                                    timeFormatted: time1 === 999999 ? '999' : formatTime(time1),
                                     missing: result1.missing || false
                                 },
                                 {
                                     rank: rank2,
                                     catRank: catRank2,
                                     time: time2,
-                                    timeFormatted: time2 === 999999 && result2.missing ? '999' : formatTime(time2),
+                                    timeFormatted: time2 === 999999 ? '999' : formatTime(time2),
                                     missing: result2.missing || false
                                 }
                             ],
@@ -1271,20 +1278,20 @@
                 <table class="results-table" id="table-${name.replace(/\s+/g, '-')}">
                     <thead>
                         <tr>
-                            <th>Poř.</th>
-                            <th>VK poř.</th>
+                            <th>#</th>
+                            <th>VK #</th>
                             <th>VK</th>
-                            <th>SČ</th>
+                            <th>StČ</th>
                             <th>RGC</th>
                             <th>Jméno</th>
                             <th>Nar.</th>
                             <th>Oddíl</th>
-                            <th>${shortRace1Name}<br>poř.</th>
-                            <th>${shortRace1Name}<br>čas</th>
-                            <th>${shortRace2Name}<br>poř.</th>
-                            <th>${shortRace2Name}<br>čas</th>
-                            <th>Součet<br>pořadí</th>
-                            <th>Součet<br>časů</th>
+                            <th>1. #</th>
+                            <th>1. 🕒</th>
+                            <th>2. #</th>
+                            <th>2. 🕒</th>
+                            <th>∑ #</th>
+                            <th>∑ 🕒</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1339,18 +1346,18 @@
                         <table class="results-table">
                             <thead>
                                 <tr>
-                                    <th>Poř.</th>
-                                    <th>SČ</th>
+                                    <th>#</th>
+                                    <th>StČ</th>
                                     <th>RGC</th>
                                     <th>Jméno</th>
                                     <th>Nar.</th>
                                     <th>Oddíl</th>
-                                    <th>${shortRace1Name}<br>poř.</th>
-                                    <th>${shortRace1Name}<br>čas</th>
-                                    <th>${shortRace2Name}<br>poř.</th>
-                                    <th>${shortRace2Name}<br>čas</th>
-                                    <th>Součet<br>pořadí</th>
-                                    <th>Součet<br>časů</th>
+                                    <th>1. #</th>
+                                    <th>1. 🕒</th>
+                                    <th>2. #</th>
+                                    <th>2. 🕒</th>
+                                    <th>∑ #</th>
+                                    <th>∑ 🕒</th>
                                 </tr>
                             </thead>
                             <tbody>
