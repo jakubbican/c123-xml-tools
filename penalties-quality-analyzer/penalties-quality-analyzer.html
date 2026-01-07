@@ -329,12 +329,14 @@
                         const courseNr = scheduleNodes[i].getElementsByTagName('CourseNr')[0]?.textContent;
                         const customTitle = scheduleNodes[i].getElementsByTagName('CustomTitle')[0]?.textContent;
                         const classId = scheduleNodes[i].getElementsByTagName('ClassId')[0]?.textContent;
+                        const startTime = scheduleNodes[i].getElementsByTagName('StartTime')[0]?.textContent;
                         
                         if (courseNr) {
                             scheduleInfo[raceId] = {
                                 courseNr,
                                 customTitle: customTitle || raceId,
-                                classId: classId || ''
+                                classId: classId || '',
+                                startTime: startTime || ''
                             };
                         }
                     }
@@ -503,13 +505,12 @@
             
             resultsTable.appendChild(headerRow);
             
-            // Seřazení závodů podle typu (ST/HO) a dne
+            // Seřazení závodů podle StartTime
             const sortedRaceIds = Object.keys(analysisResults).sort((a, b) => {
+                const startTimeA = parsedData.scheduleInfo[a]?.startTime || '';
+                const startTimeB = parsedData.scheduleInfo[b]?.startTime || '';
                 
-                const dayA = a.match(/_(\d+)$/)?.[1] || '';
-                const dayB = b.match(/_(\d+)$/)?.[1] || '';
-                
-                return dayA.localeCompare(dayB);
+                return startTimeA.localeCompare(startTimeB);
             });
             
             // Vytvoření řádků pro každou jízdu
