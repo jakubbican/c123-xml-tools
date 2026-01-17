@@ -1,84 +1,84 @@
 # Claude Code Instructions - C123 XML Tools
 
-## Projekt
+## Project
 
-C123 XML Tools - kolekce jednoduchých nástrojů pro práci s XML soubory systému Canoe123 od Siwidata.
+C123 XML Tools - collection of simple tools for working with XML files from Siwidata's Canoe123 system.
 
-**GitHub:** OpenCanoeTiming/c123-xml-tools | **Licence:** MIT
-
----
-
-## Cesty a dokumentace
-
-| Účel | Cesta |
-|------|-------|
-| **Tento projekt** | `/workspace/timing/c123-xml-tools/` |
-| **Protokol docs** | `../c123-protocol-docs/` |
-| **XML formát** | `../c123-protocol-docs/c123-xml-format.md` |
+**GitHub:** OpenCanoeTiming/c123-xml-tools | **License:** MIT
 
 ---
 
-## Jazyk
+## Paths and Documentation
 
-- Komunikace s uživatelem: **čeština**
-- Dokumentace (README, docs): **angličtina**
-- Kód, komentáře, commit messages: **angličtina**
+| Purpose | Path |
+|---------|------|
+| **This project** | `/workspace/timing/c123-xml-tools/` |
+| **Protocol docs** | `../c123-protocol-docs/` |
+| **XML format** | `../c123-protocol-docs/c123-xml-format.md` |
 
 ---
 
-## Struktura
+## Language
+
+- User communication: **Czech**
+- Documentation (README, docs): **English**
+- Code, comments, commit messages: **English**
+
+---
+
+## Structure
 
 ```
 c123-xml-tools/
 ├── penalties-quality-analyzer/
-│   ├── penalties-quality-analyzer.html   # Standalone HTML nástroj
-│   └── readme.md                         # Dokumentace
+│   ├── penalties-quality-analyzer.html   # Standalone HTML tool
+│   └── readme.md                         # Documentation
 ├── race-combinator/
-│   ├── canoe-race-combine.html           # Standalone HTML nástroj
-│   ├── docs.md                           # Detailní dokumentace
-│   └── readme.md                         # Základní info
+│   ├── canoe-race-combine.html           # Standalone HTML tool
+│   ├── docs.md                           # Detailed documentation
+│   └── readme.md                         # Basic info
 ├── LICENSE
 └── README.md
 ```
 
 ---
 
-## Nástroje
+## Tools
 
 ### penalties-quality-analyzer
-Analyzuje kvalitu zadaných penalizací v XML souboru C123.
-- Detekuje nekonzistence a chyby
-- Standalone HTML - otevřít v prohlížeči, drag & drop XML
+Analyzes quality of entered penalties in C123 XML file.
+- Detects inconsistencies and errors
+- Standalone HTML - open in browser, drag & drop XML
 
 ### race-combinator
-Kombinuje více XML souborů závodů do jednoho.
-- Sloučení výsledků z více kol/dnů
-- Standalone HTML - otevřít v prohlížeči
+Combines multiple race XML files into one.
+- Merging results from multiple rounds/days
+- Standalone HTML - open in browser
 
 ---
 
-## Použití
+## Usage
 
-Všechny nástroje jsou standalone HTML soubory:
-1. Otevřít `.html` soubor v prohlížeči
-2. Přetáhnout XML soubor(y) z Canoe123
-3. Výsledek stáhnout nebo zkopírovat
+All tools are standalone HTML files:
+1. Open `.html` file in browser
+2. Drag & drop XML file(s) from Canoe123
+3. Download or copy result
 
 ---
 
-## Vývoj
+## Development
 
-Nástroje používají vanilla JavaScript bez závislostí.
-Pro testování stačí otevřít HTML v prohlížeči.
+Tools use vanilla JavaScript with no dependencies.
+For testing, just open HTML in browser.
 
 ```bash
-# Lokální server (volitelné)
+# Local server (optional)
 npx serve .
 ```
 
 ---
 
-## Commit message formát
+## Commit Message Format
 
 ```
 feat: add new validation rule for gate penalties
@@ -88,4 +88,4 @@ docs: update race-combinator documentation
 
 ---
 
-*XML formát reference → viz `../c123-protocol-docs/c123-xml-format.md`*
+*XML format reference → see `../c123-protocol-docs/c123-xml-format.md`*
