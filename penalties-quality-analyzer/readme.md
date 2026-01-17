@@ -1,92 +1,39 @@
-# Analýza oprav penalizací kanoistických závodů
+# Penalties Quality Analyzer
 
-Jednoduchá webová aplikace pro analýzu ex-post oprav penalizací v kanoistických závodech z XML souborů závodů.
+Analyzes ex-post penalty corrections in canoe slalom race results to identify problematic gates.
 
-## Účel aplikace
+**Live tool:** https://opencanoetiming.github.io/c123-xml-tools/penalties-quality-analyzer/penalties-quality-analyzer.html
 
-Aplikace analyzuje XML soubory z kanoistických závodů a identifikuje ex-post opravy penalizací na jednotlivých brankách. Pomáhá odhalit problematické branky, kde dochází k opravám často, což může naznačovat problémy s jejich umístěním nebo s přiřazenými rozhodčími.
+## What It Does
 
-## Instalace a spuštění
+The tool detects when penalties were entered or modified **after** a competitor's run was completed. This happens when:
 
-1. Stáhněte všechny soubory do jedné složky
-2. Otevřete soubor `index.html` v moderním webovém prohlížeči
-3. Aplikace funguje lokálně ve vašem prohlížeči, není potřeba server
+1. **Time is outside the run interval** - penalty was entered more than 5 seconds before start or more than 30 seconds after finish
+2. **Time differs significantly from other penalties** - entry time deviates by more than 10 minutes from the median
 
-## Použití aplikace
+High correction counts on specific gates may indicate:
+- Poor judge visibility
+- Difficult penalty assessment
+- Technical issues with electronic entry
+- Need for judge repositioning or gate adjustments
 
-1. **Nahrání souboru**
-   - Klikněte na tlačítko "Vybrat soubor" a vyberte XML soubor se záznamy ze závodu
-   - Nebo přetáhněte XML soubor přímo do označené oblasti
+## How To Use
 
-2. **Zobrazení výsledků**
-   - Po nahrání souboru se automaticky zobrazí tabulka s analýzou oprav
-   - Každý řádek představuje jeden závod/jízdu
-   - Sloupce odpovídají jednotlivým brankám
-   - Hodnoty v buňkách označují počet ex-post oprav na dané brance
-   - Čím sytější barva, tím více oprav
+1. Export XML file from Canoe123
+2. Open the tool and drag & drop the XML file
+3. View the results table showing correction counts per gate and race
+4. Copy to clipboard for Excel analysis
 
-3. **Export výsledků**
-   - Klikněte na tlačítko "Kopírovat tabulku do schránky"
-   - Vložte obsah schránky do Excelu nebo jiného tabulkového procesoru
+## Output
 
-## Jak se identifikují ex-post opravy
+The table shows:
+- Rows: Individual races (sorted by schedule time)
+- Columns: Gate numbers (1, 2, 3, ...)
+- Values: Number of detected ex-post corrections
+- Colors: Higher intensity = more corrections (orange/red scale)
 
-Aplikace detekuje ex-post opravy na základě časových značek (GateTimes) u jednotlivých branek. Oprava je identifikována pokud:
+## Technical Notes
 
-1. **Čas zadání je mimo interval jízdy**
-   - Více než 5 sekund před začátkem jízdy (dtStart)
-   - Více než 30 sekund po dokončení jízdy (dtFinish)
-
-2. **Čas zadání se výrazně liší od ostatních časů**
-   - Rozdíl od mediánu všech časů jízdy je větší než 10 minut
-
-## Struktura XML souborů
-
-Aplikace očekává XML soubory se strukturou obsahující následující elementy:
-
-- `<Results>` - obsahuje výsledky jednotlivých jízd
-  - `<RaceId>` - identifikátor závodu/jízdy
-  - `<Id>` - identifikátor závodníka
-  - `<dtStart>` - čas začátku jízdy (HH:MM:SS.mmm)
-  - `<dtFinish>` - čas konce jízdy (HH:MM:SS.mmm)
-  - `<Gates>` - penalizace na jednotlivých brankách
-  - `<GateTimes>` - časy zadání penalizací (v milisekundách od půlnoci)
-
-- `<CourseData>` - obsahuje konfiguraci tratí
-  - `<CourseNr>` - číslo trati
-  - `<CourseConfig>` - konfigurace trati (pořadí a typy branek)
-
-- `<Schedule>` - obsahuje informace o rozvrhu závodů
-  - `<RaceId>` - identifikátor závodu
-  - `<CourseNr>` - číslo trati
-
-## Tipy pro interpretaci výsledků
-
-- **Vysoký počet oprav na jedné brance** může naznačovat:
-  - Problém s viditelností pro rozhodčí
-  - Technické problémy s elektronickým zadáváním
-  - Složitost posouzení penalizace na dané brance
-
-- **Vzorec oprav v celém závodě** může ukázat:
-  - Problematické segmenty trati
-  - Rozdíly mezi různými dny závodů
-  - Rozdíly mezi různými typy tratí (střední vs. horní)
-
-- **Doporučené úpravy organizace**:
-  - Přesunutí problematických rozhodčích
-  - Úprava umístění branek
-  - Rozdělení segmentů pro lepší správu
-
-## Technické detaily
-
-Aplikace je napsána v čistém JavaScriptu bez externích závislostí. Využívá moderní webové API:
-
-- FileReader API pro načítání souborů
-- DOMParser pro zpracování XML
-- Clipboard API pro kopírování výsledků
-
-## Omezení
-
-- Aplikace pracuje pouze s jedním XML souborem najednou
-- Nerozlišuje typ závodu kromě základního rozřazení podle ST/HO a dne
-- Nezohledňuje konkrétní jméno závodníka, pouze jízdu jako celek
+- Works entirely in your browser (no server)
+- Analyzes `GateTimes` timestamps vs `dtStart`/`dtFinish` times
+- XML format details: see [c123-protocol-docs](https://github.com/OpenCanoeTiming/c123-protocol-docs)

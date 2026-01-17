@@ -1,49 +1,39 @@
-# Kombinace výsledků kanoistických závodů
+# Race Combinator
 
-Tato webová aplikace slouží k vytváření kombinovaných výsledkových listin pro kanoistické závody. Umožňuje spárovat kategorie z různých závodů nebo tratí a vytvořit z nich výsledky pro vyhlášení kombinace.
+Combines results from multiple canoe slalom races into unified rankings for combined event awards.
 
-## Funkce aplikace
+**Live tool:** https://opencanoetiming.github.io/c123-xml-tools/race-combinator/canoe-race-combine.html
 
-- **Nahrání XML souborů** s výsledky závodů
-- **Párování kategorií** z různých závodů nebo tratí
-- **Kombinování výsledků** podle součtu pořadí a součtu časů
-- **Generování tabulek** s výsledky pro celkové pořadí i věkové kategorie
-- **Export výsledků** ve formátu vhodném pro Excel
+## What It Does
 
-## Jak používat aplikaci
+Creates combined standings by pairing categories from different races (e.g., Day 1 + Day 2, or Course A + Course B).
 
-### 1. Nahrání souborů
-- Klikněte na tlačítko "Vybrat soubory" nebo přetáhněte XML soubory do označené oblasti
-- Aplikace zpracuje soubory a extrahuje z nich potřebná data
-- Pro každý závod v XML souboru budou extrahované kategorie a výsledky
+**Ranking calculation:**
+1. Primary: Sum of placements from both races (1st + 3rd = 4 points)
+2. Tiebreaker: Sum of times from both races
 
-### 2. Párování kategorií
-- Ze seznamů vyberte dvojice kategorií, které chcete zkombinovat
-- Pro rychlejší vyhledávání můžete použít vyhledávací pole nad každým seznamem
-- Klikněte na "Spárovat vybrané kategorie" pro vytvoření kombinace
-- Kategorie, které již byly spárovány, jsou zvýrazněny
-- Spárování můžete kdykoliv zrušit kliknutím na křížek u dané kombinace
+**Special handling:**
+- If a competitor has two runs (BR1 + BR2), only the better/final result (BR2) is used
+- Missing results count as rank 999
+- Age categories are automatically determined from competitor birth year
 
-### 3. Generování výsledků
-- Klikněte na "Generovat výsledky" pro vytvoření kombinovaných výsledkových listin
-- Výsledky jsou seřazeny primárně podle součtu pořadí a sekundárně podle součtu časů
-- Pro každou kategorii se vytvoří samostatná záložka
-- V každé záložce najdete tabulku s celkovým pořadím i pořadím ve věkových kategoriích
+## How To Use
 
-### 4. Export výsledků
-- Klikněte na "Kopírovat aktuální tabulku do schránky"
-- Vložte obsah schránky do Excelu nebo jiného tabulkového programu
-- Výsledky lze dále upravovat a formátovat dle potřeby
+1. **Upload XML files** - drag & drop one or more XML files from Canoe123
+2. **Pair categories** - select matching categories from both file lists (e.g., "C1M Day 1" + "C1M Day 2")
+3. **Generate results** - view combined standings with overall and age category rankings
+4. **Export** - copy tables to clipboard for Excel
 
-## Poznámky
+## Output
 
-- Pokud závodník chybí v jednom ze závodů, je mu přiřazeno pořadí 999
-- U věkových kategorií je závodník zařazen podle ročníku narození
-- Pro každý závod je automaticky vybrán lepší/finální výsledek (druhá jízda), pokud existuje
-- U kategorií je zobrazen počet závodníků
+For each paired combination:
+- **Overall ranking table** - all competitors sorted by combined rank
+- **Age category tables** - separate rankings for each age group (U23, Senior, etc.)
 
-## Technické požadavky
+Columns include: rank, age category rank, bib number, name, year, club, individual race results, and combined totals.
 
-- Aplikace běží kompletně ve webovém prohlížeči a nevyžaduje připojení k internetu
-- Podporuje všechny moderní prohlížeče (Chrome, Firefox, Edge, Safari)
-- Zpracovává XML soubory generované programem Canoe123
+## Technical Notes
+
+- Works entirely in your browser (no server)
+- Supports multiple XML files from different events
+- XML format details: see [c123-protocol-docs](https://github.com/OpenCanoeTiming/c123-protocol-docs)

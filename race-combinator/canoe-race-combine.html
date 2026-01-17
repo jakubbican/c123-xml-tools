@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kombinace výsledků kanoistických závodů</title>
+    <title>Canoe Race Results Combinator</title>
 
-    <!-- Google Fonts s system fallback -->
+    <!-- Google Fonts with system fallback -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://opencanoetiming.github.io/timing-design-system/dist/timing.min.css">
 
     <style>
-        /* Override fontů - Google Fonts místo self-hosted */
+        /* Override fonts - Google Fonts instead of self-hosted */
         :root {
             --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
@@ -216,7 +216,7 @@
             gap: var(--space-3);
         }
 
-        /* Tabs - using timing DS tabs */
+        /* Tabs - using timing design system */
         .tab-list {
             margin-bottom: var(--space-4);
         }
@@ -311,16 +311,16 @@
     <div class="app-container">
         <div class="card">
             <div class="card-body">
-                <h1>Kombinace výsledků kanoistických závodů</h1>
+                <h1>Canoe Race Results Combinator</h1>
 
                 <div class="input-section">
-                    <h2>1. Nahrání XML souborů</h2>
-                    <p>Nahrajte jeden nebo více XML souborů s výsledky závodů.</p>
+                    <h2>1. Upload XML Files</h2>
+                    <p>Upload one or more XML files with race results.</p>
 
                     <div class="dropzone" id="dropZone">
-                        <label for="xmlFile" class="btn btn-primary">Vybrat soubory</label>
+                        <label for="xmlFile" class="btn btn-primary">Select files</label>
                         <input type="file" id="xmlFile" accept=".xml" multiple style="display: none;">
-                        <p>nebo přetáhněte soubory sem</p>
+                        <p>or drag and drop files here</p>
                         <div id="fileList"></div>
                     </div>
 
@@ -328,20 +328,20 @@
 
                     <div class="nav-buttons">
                         <div></div>
-                        <button id="goToStep2" class="btn btn-primary" disabled>Pokračovat na párování kategorií &rarr;</button>
+                        <button id="goToStep2" class="btn btn-primary" disabled>Continue to category pairing &rarr;</button>
                     </div>
                 </div>
 
                 <div class="matching-section hidden" id="step2">
-                    <h2>2. Párování kategorií pro kombinaci</h2>
-                    <p>Vyberte kategorie, které chcete zkombinovat pro výsledné pořadí.</p>
+                    <h2>2. Category Pairing for Combination</h2>
+                    <p>Select categories you want to combine for the final ranking.</p>
 
                     <div class="categories-container">
                         <div class="category-box card">
                             <div class="card-body">
-                                <h3>První závod</h3>
+                                <h3>First Race</h3>
                                 <div class="filter-container">
-                                    <input type="text" class="input category-filter" id="filter1" placeholder="Filtrovat kategorie...">
+                                    <input type="text" class="input category-filter" id="filter1" placeholder="Filter categories...">
                                 </div>
                                 <div class="category-list" id="category1List"></div>
                                 <div class="count-info" id="count1"></div>
@@ -350,9 +350,9 @@
 
                         <div class="category-box card">
                             <div class="card-body">
-                                <h3>Druhý závod</h3>
+                                <h3>Second Race</h3>
                                 <div class="filter-container">
-                                    <input type="text" class="input category-filter" id="filter2" placeholder="Filtrovat kategorie...">
+                                    <input type="text" class="input category-filter" id="filter2" placeholder="Filter categories...">
                                 </div>
                                 <div class="category-list" id="category2List"></div>
                                 <div class="count-info" id="count2"></div>
@@ -361,32 +361,32 @@
                     </div>
 
                     <div class="match-selected">
-                        <button id="matchSelected" class="btn btn-primary" disabled>Spárovat vybrané kategorie</button>
+                        <button id="matchSelected" class="btn btn-primary" disabled>Pair selected categories</button>
                     </div>
 
-                    <h3>Spárované kategorie</h3>
+                    <h3>Paired Categories</h3>
                     <div id="pairedCategories"></div>
 
                     <div class="nav-buttons">
-                        <button id="backToStep1" class="btn btn-secondary">&larr; Zpět na nahrání souborů</button>
-                        <button id="goToStep3" class="btn btn-primary" disabled>Generovat výsledky &rarr;</button>
+                        <button id="backToStep1" class="btn btn-secondary">&larr; Back to file upload</button>
+                        <button id="goToStep3" class="btn btn-primary" disabled>Generate results &rarr;</button>
                     </div>
                 </div>
 
                 <div class="results-section hidden" id="step3">
-                    <h2>3. Kombinované výsledky</h2>
+                    <h2>3. Combined Results</h2>
 
                     <div class="tab-list" id="resultTabs"></div>
                     <div id="tabContents"></div>
 
                     <div class="export-buttons">
-                        <button id="copyToClipboard" class="btn btn-secondary">Kopírovat aktuální tabulku do schránky</button>
-                        <span id="copySuccess" class="copy-success">Zkopírováno!</span>
+                        <button id="copyToClipboard" class="btn btn-secondary">Copy current table to clipboard</button>
+                        <span id="copySuccess" class="copy-success">Copied!</span>
                     </div>
 
                     <div class="nav-buttons">
-                        <button id="backToStep2" class="btn btn-secondary">&larr; Zpět na párování kategorií</button>
-                        <button id="startOver" class="btn btn-ghost">Začít znovu</button>
+                        <button id="backToStep2" class="btn btn-secondary">&larr; Back to category pairing</button>
+                        <button id="startOver" class="btn btn-ghost">Start over</button>
                     </div>
                 </div>
             </div>
@@ -394,7 +394,7 @@
     </div>
 
     <script>
-        // Globální proměnné pro uložení dat
+        // Global variables for storing data
         let loadedFiles = [];
         let parsedData = {
             participants: {},
@@ -408,7 +408,7 @@
         let pairedCategories = [];
         let combinedResults = {};
 
-        // DOM elementy
+        // DOM elements
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('xmlFile');
         const fileList = document.getElementById('fileList');
@@ -424,7 +424,7 @@
         const copyToClipboardButton = document.getElementById('copyToClipboard');
         const copySuccess = document.getElementById('copySuccess');
 
-        // Event listeners pro navigaci
+        // Event listeners for navigation
         document.getElementById('goToStep2').addEventListener('click', () => {
             document.querySelector('.input-section').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
@@ -451,7 +451,7 @@
             location.reload();
         });
 
-        // Drag and drop pro nahrávání souborů
+        // Drag and drop for file upload
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, preventDefaults, false);
         });
@@ -489,7 +489,7 @@
             handleFiles(this.files);
         });
 
-        // Helper pro zobrazení statusu
+        // Helper for displaying status
         function showStatus(message, type) {
             uploadStatus.innerHTML = message;
             uploadStatus.className = `alert alert-${type}`;
@@ -499,13 +499,13 @@
         function handleFiles(files) {
             if (files.length === 0) return;
 
-            showStatus(`<span class="loading"></span> Načítání ${files.length} souborů...`, 'info');
+            showStatus(`<span class="loading"></span> Loading ${files.length} file(s)...`, 'info');
 
             const filePromises = [];
 
             for (let i = 0; i < files.length; i++) {
                 if (files[i].type !== 'text/xml' && !files[i].name.endsWith('.xml')) {
-                    showStatus('Chyba: Je možné nahrát pouze XML soubory.', 'error');
+                    showStatus('Error: Only XML files can be uploaded.', 'error');
                     return;
                 }
 
@@ -524,15 +524,15 @@
             Promise.all(filePromises)
                 .then(() => {
                     updateFileList();
-                    showStatus(`Úspěšně načteno ${loadedFiles.length} souborů.`, 'success');
+                    showStatus(`Successfully loaded ${loadedFiles.length} file(s).`, 'success');
                     goToStep2Button.disabled = false;
 
-                    // Extrahovat informace o kategoriích
+                    // Extract category information
                     extractCategories();
                 })
                 .catch(error => {
-                    console.error('Chyba při načítání souborů:', error);
-                    showStatus(`Chyba při zpracování: ${error.message}`, 'error');
+                    console.error('Error loading files:', error);
+                    showStatus(`Processing error: ${error.message}`, 'error');
                 });
         }
 
@@ -545,7 +545,7 @@
                 };
 
                 reader.onerror = function() {
-                    reject(new Error(`Nelze načíst soubor ${file.name}`));
+                    reject(new Error(`Cannot read file ${file.name}`));
                 };
 
                 reader.readAsText(file);
@@ -562,9 +562,9 @@
             });
         }
 
-        // Funkce pro odstranění přípony z ID
+        // Function to remove extension from ID
         function normalizeId(id) {
-            // Odstraní vše za první tečkou (včetně tečky)
+            // Remove everything after first dot (including dot)
             return id.split('.')[0];
         }
 
@@ -573,13 +573,13 @@
                 const parser = new DOMParser();
                 const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
 
-                // Kontrola chyby parsování
+                // Check for parsing errors
                 const errorNode = xmlDoc.querySelector("parsererror");
                 if (errorNode) {
-                    throw new Error("Chyba při parsování XML");
+                    throw new Error("Error parsing XML");
                 }
 
-                // Zpracování účastníků (Participants)
+                // Process participants
                 xmlDoc.querySelectorAll('Participants').forEach(participant => {
                     const id = normalizeId(participant.querySelector('Id')?.textContent);
                     if (id) {
@@ -600,7 +600,7 @@
                     }
                 });
 
-                // Zpracování výsledků (Results)
+                // Process results
                 xmlDoc.querySelectorAll('Results').forEach(result => {
                     const raceId = result.querySelector('RaceId')?.textContent;
                     const id = normalizeId(result.querySelector('Id')?.textContent);
@@ -631,7 +631,7 @@
                     }
                 });
 
-                // Zpracování kategorií (Classes)
+                // Process classes
                 xmlDoc.querySelectorAll('Classes').forEach(classNode => {
                     const classId = classNode.querySelector('ClassId')?.textContent;
 
@@ -644,7 +644,7 @@
                             source: fileName
                         };
 
-                        // Zpracování věkových kategorií
+                        // Process age categories
                         classNode.querySelectorAll('Categories').forEach(category => {
                             const catId = category.querySelector('CatId')?.textContent;
 
@@ -659,7 +659,7 @@
 
                                 parsedData.classes[classId].categories.push(categoryData);
 
-                                // Ukládáme také v rámci kategorií pro snadnější přístup
+                                // Also store in categories for easier access
                                 const catKey = `${classId}_${catId}`;
                                 parsedData.categories[catKey] = categoryData;
                             }
@@ -667,7 +667,7 @@
                     }
                 });
 
-                // Zpracování událostí (Events)
+                // Process events
                 xmlDoc.querySelectorAll('Events').forEach(event => {
                     const eventId = event.querySelector('EventId')?.textContent;
 
@@ -684,7 +684,7 @@
                     }
                 });
 
-                // Zpracování rozpisů (Schedule)
+                // Process schedule
                 xmlDoc.querySelectorAll('Schedule').forEach(schedule => {
                     const raceId = schedule.querySelector('RaceId')?.textContent;
 
@@ -693,7 +693,7 @@
                             parsedData.results[raceId] = {};
                         }
 
-                        // Přidání informací o závodě do výsledků
+                        // Add race information to results
                         parsedData.results[raceId].scheduleInfo = {
                             raceId: raceId,
                             classId: schedule.querySelector('ClassId')?.textContent,
@@ -708,7 +708,7 @@
 
                 return true;
             } catch (error) {
-                console.error('Chyba při parsování XML:', error);
+                console.error('Error parsing XML:', error);
                 throw error;
             }
         }
@@ -717,29 +717,29 @@
             availableCategories = [];
             let dailyBestResults = {};
 
-            // Nejprve zjistíme, které z jízd (BR1, BR2) je lepší pro každého závodníka
-            // a uložíme si mapování, které raceId představuje finální výsledky
+            // First determine which run (BR1, BR2) is better for each competitor
+            // and store mapping of which raceId represents final results
             for (const raceId in parsedData.results) {
                 if (parsedData.results[raceId].scheduleInfo) {
                     const { classId, disId } = parsedData.results[raceId].scheduleInfo;
 
-                    // Kontrola, zda se jedná o druhou jízdu (BR2)
+                    // Check if this is second run (BR2)
                     if (disId === 'BR2') {
-                        // Vytvoříme klíč pro denní kombinaci (např. "C1Z_17")
+                        // Create key for daily combination (e.g. "C1Z_17")
                         const dayMatch = raceId.match(/(.+)_BR\d+_(\d+)$/);
                         if (dayMatch) {
                             const baseClass = dayMatch[1];
                             const day = dayMatch[2];
                             const dailyKey = `${baseClass}_${day}`;
 
-                            // Zaznamenáme, že pro tento den a kategorii je BR2 finální výsledek
+                            // Record that BR2 is the final result for this day and category
                             dailyBestResults[dailyKey] = raceId;
                         }
                     }
                 }
             }
 
-            // Nyní zpracujeme jen relevantní RaceId (ta, která představují finální výsledky)
+            // Now process only relevant RaceIds (those representing final results)
             const processedClasses = new Set();
 
             for (const raceId in parsedData.results) {
@@ -747,19 +747,19 @@
                     const { classId, customTitle, source, disId } = parsedData.results[raceId].scheduleInfo;
                     const dayMatch = raceId.match(/(.+)_BR\d+_(\d+)$/);
 
-                    // Přeskočíme BR1 jízdy, pokud existuje BR2
+                    // Skip BR1 runs if BR2 exists
                     if (dayMatch) {
                         const baseClass = dayMatch[1];
                         const day = dayMatch[2];
                         const dailyKey = `${baseClass}_${day}`;
 
-                        // Pokud existuje BR2 a toto je BR1, přeskočíme
+                        // If BR2 exists and this is BR1, skip
                         if (dailyBestResults[dailyKey] && dailyBestResults[dailyKey] !== raceId) {
                             continue;
                         }
                     }
 
-                    // Pro ostatní případy zkontrolujeme, zda jsme už tuto kategorii v daný den nezpracovali
+                    // For other cases, check if we've already processed this category for the day
                     let uniqueClassId = classId;
                     if (dayMatch) {
                         uniqueClassId = `${classId}_${dayMatch[2]}`;
@@ -770,7 +770,7 @@
                     }
                     processedClasses.add(uniqueClassId);
 
-                    // Spočítáme počet závodníků v této kategorii
+                    // Count competitors in this category
                     let competitorCount = 0;
                     for (const id in parsedData.results[raceId]) {
                         if (id !== 'scheduleInfo') {
@@ -778,7 +778,7 @@
                         }
                     }
 
-                    // Vytvoření objektu kategorie
+                    // Create category object
                     const categoryInfo = {
                         raceId: raceId,
                         classId: classId,
@@ -788,15 +788,15 @@
                         competitorCount: competitorCount
                     };
 
-                    // Přidání do seznamu dostupných kategorií
+                    // Add to list of available categories
                     availableCategories.push(categoryInfo);
 
-                    // Uložení do mapy pro snadnější vyhledávání
+                    // Store in map for easier lookup
                     categoriesInfo[raceId] = categoryInfo;
                 }
             }
 
-            // Seřazení kategorií podle názvu
+            // Sort categories by name
             availableCategories.sort((a, b) => {
                 if (a.classId !== b.classId) {
                     return a.classId.localeCompare(b.classId);
@@ -827,7 +827,7 @@
                 item.dataset.raceId = category.raceId;
 
                 let title = `${category.title} (${getRaceDay(category.raceId)})`;
-                let subtitle = `Zdroj: ${category.source} | Závodníci: ${category.competitorCount || 0}`;
+                let subtitle = `Source: ${category.source} | Competitors: ${category.competitorCount || 0}`;
 
                 item.innerHTML = `
                     <div>${title}</div>
@@ -835,21 +835,21 @@
                 `;
 
                 item.addEventListener('click', function() {
-                    // Odstraní výběr všech položek v tomto seznamu
+                    // Remove selection from all items in this list
                     Array.from(this.parentElement.children).forEach(el => {
                         if (el.classList.contains('category-item')) {
                             el.classList.remove('selected');
                         }
                     });
 
-                    // Označí tuto položku jako vybranou
+                    // Mark this item as selected
                     this.classList.add('selected');
 
-                    // Kontrola, zda jsou obě kategorie vybrány
+                    // Check if both categories are selected
                     checkIfBothCategoriesSelected();
                 });
 
-                // Přidání do obou seznamů pro výběr
+                // Add to both lists for selection
                 const item1 = item.cloneNode(true);
                 item1.addEventListener('click', function() {
                     Array.from(this.parentElement.children).forEach(el => {
@@ -866,8 +866,8 @@
             });
 
             // Update counts
-            document.getElementById('count1').textContent = `Celkem kategorií: ${availableCategories.length}`;
-            document.getElementById('count2').textContent = `Celkem kategorií: ${availableCategories.length}`;
+            document.getElementById('count1').textContent = `Total categories: ${availableCategories.length}`;
+            document.getElementById('count2').textContent = `Total categories: ${availableCategories.length}`;
         }
 
         function filterCategories(query, categoryList, countId) {
@@ -883,15 +883,15 @@
                 }
             });
 
-            // Aktualizace počtu zobrazených kategorií
+            // Update visible categories count
             const visibleCount = Array.from(items).filter(item => item.style.display !== 'none').length;
-            document.getElementById(countId).textContent = `Zobrazeno: ${visibleCount} z ${availableCategories.length}`;
+            document.getElementById(countId).textContent = `Showing: ${visibleCount} of ${availableCategories.length}`;
         }
 
         function getRaceDay(raceId) {
-            // Extrahovat den ze závodního ID (např. C1M_ST_BR1_6 => den 6)
+            // Extract day from race ID (e.g. C1M_ST_BR1_6 => day 6)
             const dayMatch = raceId.match(/_(\d+)$/);
-            return dayMatch ? `den ${dayMatch[1]}` : '';
+            return dayMatch ? `day ${dayMatch[1]}` : '';
         }
 
         function checkIfBothCategoriesSelected() {
@@ -901,7 +901,7 @@
             matchSelectedButton.disabled = !(cat1Selected && cat2Selected);
         }
 
-        // Event listener pro párování vybraných kategorií
+        // Event listener for pairing selected categories
         matchSelectedButton.addEventListener('click', () => {
             const cat1Selected = category1List.querySelector('.selected');
             const cat2Selected = category2List.querySelector('.selected');
@@ -910,16 +910,16 @@
                 const cat1RaceId = cat1Selected.dataset.raceId;
                 const cat2RaceId = cat2Selected.dataset.raceId;
 
-                // Kontrola, zda už není tato kombinace spárovaná
+                // Check if this combination is already paired
                 const isDuplicate = pairedCategories.some(pair =>
                     (pair.race1 === cat1RaceId && pair.race2 === cat2RaceId) ||
                     (pair.race1 === cat2RaceId && pair.race2 === cat1RaceId)
                 );
 
                 if (!isDuplicate) {
-                    // Přidání nového páru
+                    // Add new pair
                     const newPair = {
-                        id: Date.now(), // Unikátní ID pro snadné mazání
+                        id: Date.now(), // Unique ID for easy deletion
                         race1: cat1RaceId,
                         race2: cat2RaceId,
                         name: generateCombinedName(cat1RaceId, cat2RaceId)
@@ -928,12 +928,12 @@
                     pairedCategories.push(newPair);
                     updatePairedCategoriesList();
 
-                    // Odznačení výběru
+                    // Deselect
                     cat1Selected.classList.remove('selected');
                     cat2Selected.classList.remove('selected');
                     matchSelectedButton.disabled = true;
 
-                    // Povolení tlačítka pro generování výsledků
+                    // Enable generate results button
                     goToStep3Button.disabled = pairedCategories.length === 0;
                 }
             }
@@ -944,40 +944,42 @@
             const race2Info = categoriesInfo[race2Id];
 
             if (race1Info && race2Info) {
-                // Trimování názvu od koncových částí (den, jízda)
+                // Trim name from trailing parts (day, run)
                 let cleanTitle1 = race1Info.title
-                    .replace(/\s*-\s*\d+\.\s*jízda\s*$/i, '') // Odebere " - X. jízda" z konce
-                    .replace(/\s*\(den\s*\d+\)\s*$/i, '')     // Odebere " (den X)" z konce
+                    .replace(/\s*-\s*\d+\.\s*jízda\s*$/i, '') // Remove " - X. jízda" from end
+                    .replace(/\s*\(den\s*\d+\)\s*$/i, '')     // Remove " (den X)" from end
+                    .replace(/\s*\(day\s*\d+\)\s*$/i, '')     // Remove " (day X)" from end
                     .trim();
 
                 let cleanTitle2 = race2Info.title
                     .replace(/\s*-\s*\d+\.\s*jízda\s*$/i, '')
                     .replace(/\s*\(den\s*\d+\)\s*$/i, '')
+                    .replace(/\s*\(day\s*\d+\)\s*$/i, '')
                     .trim();
 
-                // Pokud jsou názvy stejné, použijeme jen jeden
+                // If names are the same, use only one
                 if (cleanTitle1 === cleanTitle2) {
-                    return `${cleanTitle1} - Kombinace`;
+                    return `${cleanTitle1} - Combined`;
                 } else {
-                    return `${cleanTitle1}/${cleanTitle2} - Kombinace`;
+                    return `${cleanTitle1}/${cleanTitle2} - Combined`;
                 }
             }
 
-            return 'Kombinace závodů';
+            return 'Race Combination';
         }
 
         function updatePairedCategoriesList() {
             pairedCategoriesContainer.innerHTML = '';
 
             if (pairedCategories.length === 0) {
-                pairedCategoriesContainer.innerHTML = '<p class="text-muted">Zatím nebyly spárovány žádné kategorie.</p>';
+                pairedCategoriesContainer.innerHTML = '<p class="text-muted">No categories paired yet.</p>';
                 return;
             }
 
-            // Vytvoříme hlavičku s počtem
+            // Create header with count
             const headerElem = document.createElement('div');
             headerElem.className = 'paired-categories-header';
-            headerElem.innerHTML = `<h4>Aktuálně spárováno: ${pairedCategories.length} kombinací</h4>`;
+            headerElem.innerHTML = `<h4>Currently paired: ${pairedCategories.length} combination(s)</h4>`;
             pairedCategoriesContainer.appendChild(headerElem);
 
             pairedCategories.forEach(pair => {
@@ -989,45 +991,45 @@
 
                 pairElem.innerHTML = `
                     <div class="pair-item">${race1Info.title} (${getRaceDay(pair.race1)})
-                        <div class="competitor-info">Závodníci: ${race1Info.competitorCount || 0}</div>
+                        <div class="competitor-info">Competitors: ${race1Info.competitorCount || 0}</div>
                     </div>
                     <div class="pair-arrow">+</div>
                     <div class="pair-item">${race2Info.title} (${getRaceDay(pair.race2)})
-                        <div class="competitor-info">Závodníci: ${race2Info.competitorCount || 0}</div>
+                        <div class="competitor-info">Competitors: ${race2Info.competitorCount || 0}</div>
                     </div>
-                    <button class="remove-pair" data-id="${pair.id}" title="Odstranit">&#10006;</button>
+                    <button class="remove-pair" data-id="${pair.id}" title="Remove">&#10006;</button>
                 `;
 
                 pairedCategoriesContainer.appendChild(pairElem);
             });
 
-            // Přidat event listenery pro tlačítka odstranění páru
+            // Add event listeners for pair removal buttons
             document.querySelectorAll('.remove-pair').forEach(button => {
                 button.addEventListener('click', function() {
                     const pairId = parseInt(this.dataset.id);
                     pairedCategories = pairedCategories.filter(pair => pair.id !== pairId);
                     updatePairedCategoriesList();
 
-                    // Zakázat tlačítko pro generování výsledků, pokud nejsou žádné páry
+                    // Disable generate results button if no pairs
                     goToStep3Button.disabled = pairedCategories.length === 0;
 
-                    // Aktualizace vizuálního označení v seznamech
+                    // Update visual indicators in lists
                     updateVisualIndicators();
                 });
             });
 
-            // Aktualizujeme vizuální označení v seznamech
+            // Update visual indicators in lists
             updateVisualIndicators();
         }
 
-        // Funkce pro aktualizaci vizuálního označení již spárovaných kategorií
+        // Function to update visual indicators for already paired categories
         function updateVisualIndicators() {
-            // Reset všech označení
+            // Reset all indicators
             document.querySelectorAll('.category-item').forEach(item => {
                 item.classList.remove('paired');
             });
 
-            // Označení spárovaných kategorií
+            // Mark paired categories
             pairedCategories.forEach(pair => {
                 document.querySelectorAll(`.category-item[data-race-id="${pair.race1}"]`).forEach(item => {
                     item.classList.add('paired');
@@ -1043,15 +1045,15 @@
         function generateCombinedResults() {
             combinedResults = {};
 
-            // Generování výsledků pro každý pár kategorií
+            // Generate results for each category pair
             pairedCategories.forEach(pair => {
                 const { race1, race2, name } = pair;
 
-                // Získání výsledků z obou závodů
+                // Get results from both races
                 const results1 = parsedData.results[race1] || {};
                 const results2 = parsedData.results[race2] || {};
 
-                // Spojení závodníků z obou závodů
+                // Merge competitors from both races
                 const allCompetitorIds = new Set();
 
                 for (const id in results1) {
@@ -1066,14 +1068,14 @@
                     }
                 }
 
-                // Vytvoření kombinovaných výsledků
+                // Create combined results
                 const competitorsResults = [];
 
                 allCompetitorIds.forEach(id => {
                     const competitor = parsedData.participants[id];
 
                     if (competitor) {
-                        // Výsledky z prvního závodu
+                        // Results from first race
                         const result1 = results1[id] || {
                             rnk: 999,
                             catRnk: 999,
@@ -1084,7 +1086,7 @@
                             missing: true
                         };
 
-                        // Výsledky z druhého závodu
+                        // Results from second race
                         const result2 = results2[id] || {
                             rnk: 999,
                             catRnk: 999,
@@ -1095,7 +1097,7 @@
                             missing: true
                         };
 
-                        // Použijeme TotalRnk a TotalTotal, pokud jsou k dispozici (lepší čas z obou jízd)
+                        // Use TotalRnk and TotalTotal if available (better time from both runs)
                         const rank1 = result1.totalRnk && !result1.missing ? result1.totalRnk : result1.rnk;
                         const rank2 = result2.totalRnk && !result2.missing ? result2.totalRnk : result2.rnk;
 
@@ -1105,18 +1107,18 @@
                         const time1 = result1.totalTotal && !result1.missing ? result1.totalTotal : result1.total;
                         const time2 = result2.totalTotal && !result2.missing ? result2.totalTotal : result2.total;
 
-                        // Výpočet kombinovaného pořadí
+                        // Calculate combined ranking
                         const combinedRank = rank1 + rank2;
                         const combinedCatRank = catRank1 + catRank2;
                         const combinedTime = time1 + time2;
 
-                        // Určení věkové kategorie
+                        // Determine age category
                         const classId = competitor.classId;
                         const year = parseInt(competitor.year) || 0;
-                        let ageCategory = competitor.catId || ''; // Nejprve zkusíme přímé CatId
+                        let ageCategory = competitor.catId || ''; // First try direct CatId
                         let ageCategoryName = '';
 
-                        // Pokud nemáme přímé CatId, zkusíme najít podle věku
+                        // If we don't have direct CatId, try to find by age
                         if (!ageCategory && parsedData.classes[classId]) {
                             const categories = parsedData.classes[classId].categories;
 
@@ -1128,13 +1130,13 @@
                                 }
                             }
                         } else if (ageCategory) {
-                            // Pokud máme CatId, najdeme jméno kategorie
+                            // If we have CatId, find category name
                             const catKey = `${classId}_${ageCategory}`;
                             if (parsedData.categories[catKey]) {
                                 ageCategoryName = parsedData.categories[catKey].category;
                             }
 
-                            // Další možnost - podívat se přímo do třídy
+                            // Another option - look directly in class
                             if (!ageCategoryName && parsedData.classes[classId]) {
                                 const categories = parsedData.classes[classId].categories;
                                 for (const cat of categories) {
@@ -1180,23 +1182,23 @@
                     }
                 });
 
-                // Seřazení výsledků podle kombinovaného pořadí
+                // Sort results by combined ranking
                 competitorsResults.sort((a, b) => {
-                    // Nejprve podle součtu pořadí
+                    // First by sum of rankings
                     if (a.combinedRank !== b.combinedRank) {
                         return a.combinedRank - b.combinedRank;
                     }
 
-                    // Pak podle součtu časů
+                    // Then by sum of times
                     return a.combinedTime - b.combinedTime;
                 });
 
-                // Přidání absolutního pořadí
+                // Add absolute ranking
                 competitorsResults.forEach((competitor, index) => {
                     competitor.absoluteRank = index + 1;
                 });
 
-                // Rozdělení podle věkových kategorií
+                // Split by age categories
                 const ageCategoriesResults = {};
 
                 competitorsResults.forEach(competitor => {
@@ -1212,15 +1214,15 @@
                     }
                 });
 
-                // Seřazení věkových kategorií
+                // Sort age categories
                 for (const catId in ageCategoriesResults) {
-                    // Přidání pořadí v rámci kategorie
+                    // Add ranking within category
                     ageCategoriesResults[catId].competitors.forEach((competitor, index) => {
                         competitor.categoryRank = index + 1;
                     });
                 }
 
-                // Uložení výsledků
+                // Save results
                 combinedResults[name] = {
                     name,
                     race1Id: race1,
@@ -1232,18 +1234,18 @@
                 };
             });
 
-            // Vytvoření záložek pro výsledky
+            // Create tabs for results
             createResultTabs();
         }
 
         function formatTime(timeInMs) {
             if (timeInMs === 999999) return 'N/A';
 
-            // Čas je v milisekundách (např. 87660 = 87.66 sekund)
+            // Time is in milliseconds (e.g. 87660 = 87.66 seconds)
             const seconds = Math.floor(timeInMs / 1000);
             const milliseconds = timeInMs % 1000;
 
-            // Pro formátování sekund a milisekund
+            // Format seconds and milliseconds
             return `${seconds}.${String(milliseconds).padStart(2, '0')}`;
         }
 
@@ -1251,13 +1253,13 @@
             resultTabs.innerHTML = '';
             tabContents.innerHTML = '';
 
-            // Vytvoření záložek pro každou kombinaci
+            // Create tabs for each combination
             let isFirst = true;
 
             for (const resultKey in combinedResults) {
                 const result = combinedResults[resultKey];
 
-                // Vytvoření záložky
+                // Create tab
                 const tab = document.createElement('button');
                 tab.className = `tab ${isFirst ? 'active' : ''}`;
                 tab.dataset.tabId = resultKey;
@@ -1273,12 +1275,12 @@
 
                 resultTabs.appendChild(tab);
 
-                // Vytvoření obsahu záložky
+                // Create tab content
                 const content = document.createElement('div');
                 content.className = `tab-panel ${isFirst ? 'active' : ''}`;
                 content.id = `content-${resultKey}`;
 
-                // Vytvoření tabulky s výsledky
+                // Create results table
                 content.innerHTML = createResultTable(result);
 
                 tabContents.appendChild(content);
@@ -1286,22 +1288,22 @@
                 isFirst = false;
             }
 
-            // Pokud nejsou žádné výsledky
+            // If no results
             if (Object.keys(combinedResults).length === 0) {
-                tabContents.innerHTML = '<p>Nebyly vygenerovány žádné výsledky.</p>';
+                tabContents.innerHTML = '<p>No results were generated.</p>';
             }
         }
 
         function createResultTable(result) {
             const { name, race1Name, race2Name, allResults, ageCategories } = result;
 
-            // Zkrátíme názvy závodů pro sloupce
-            const shortRace1Name = race1Name.replace(/\s-\s.*$/, ''); // Odstraní vše za prvním " - "
+            // Shorten race names for columns
+            const shortRace1Name = race1Name.replace(/\s-\s.*$/, ''); // Remove everything after first " - "
             const shortRace2Name = race2Name.replace(/\s-\s.*$/, '');
 
             let html = `
                 <h3>${name}</h3>
-                <p>Kombinace závodů: ${race1Name} + ${race2Name}</p>
+                <p>Race combination: ${race1Name} + ${race2Name}</p>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-hover" id="table-${name.replace(/\s+/g, '-')}">
@@ -1312,23 +1314,23 @@
                                 <th>VK</th>
                                 <th>StČ</th>
                                 <th>RGC</th>
-                                <th>Jméno</th>
-                                <th>Nar.</th>
-                                <th>Oddíl</th>
-                                <th>1. #</th>
-                                <th>1. čas</th>
-                                <th>2. #</th>
-                                <th>2. čas</th>
+                                <th>Name</th>
+                                <th>Year</th>
+                                <th>Club</th>
+                                <th>1st #</th>
+                                <th>1st time</th>
+                                <th>2nd #</th>
+                                <th>2nd time</th>
                                 <th>∑ #</th>
-                                <th>∑ čas</th>
+                                <th>∑ time</th>
                             </tr>
                         </thead>
                         <tbody>
             `;
 
-            // Přidání řádků s výsledky
+            // Add result rows
             allResults.forEach(competitor => {
-                // Najdeme pořadí v rámci věkové kategorie
+                // Find ranking within age category
                 let vkPor = '';
                 if (competitor.ageCategory && ageCategories[competitor.ageCategory]) {
                     const categoryCompetitors = ageCategories[competitor.ageCategory].competitors;
@@ -1364,9 +1366,9 @@
                 </div>
             `;
 
-            // Přidání tabulek pro každou věkovou kategorii
+            // Add tables for each age category
             if (Object.keys(ageCategories).length > 0) {
-                html += `<h4>Výsledky podle věkových kategorií</h4>`;
+                html += `<h4>Results by Age Categories</h4>`;
 
                 for (const catId in ageCategories) {
                     const category = ageCategories[catId];
@@ -1380,15 +1382,15 @@
                                         <th>#</th>
                                         <th>StČ</th>
                                         <th>RGC</th>
-                                        <th>Jméno</th>
-                                        <th>Nar.</th>
-                                        <th>Oddíl</th>
-                                        <th>1. #</th>
-                                        <th>1. čas</th>
-                                        <th>2. #</th>
-                                        <th>2. čas</th>
+                                        <th>Name</th>
+                                        <th>Year</th>
+                                        <th>Club</th>
+                                        <th>1st #</th>
+                                        <th>1st time</th>
+                                        <th>2nd #</th>
+                                        <th>2nd time</th>
                                         <th>∑ #</th>
-                                        <th>∑ čas</th>
+                                        <th>∑ time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1424,9 +1426,9 @@
             return html;
         }
 
-        // Funkce pro kopírování tabulky do schránky
+        // Function to copy table to clipboard
         copyToClipboardButton.addEventListener('click', () => {
-            // Najít aktivní záložku a její tabulku
+            // Find active tab and its table
             const activeTab = document.querySelector('.tab.active');
             if (!activeTab) return;
 
@@ -1437,30 +1439,30 @@
             const table = activeContent.querySelector('.table');
             if (!table) return;
 
-            // Převést tabulku do TSV (Tab-Separated Values) pro Excel
+            // Convert table to TSV (Tab-Separated Values) for Excel
             let tsvContent = '';
 
-            // Záhlaví
+            // Headers
             const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
             tsvContent += headers.join('\t') + '\n';
 
-            // Řádky
+            // Rows
             const rows = table.querySelectorAll('tbody tr');
             rows.forEach(row => {
                 const cells = Array.from(row.querySelectorAll('td')).map(td => td.textContent);
                 tsvContent += cells.join('\t') + '\n';
             });
 
-            // Kopírovat do schránky
+            // Copy to clipboard
             navigator.clipboard.writeText(tsvContent)
                 .then(() => {
-                    // Zobrazit potvrzení
+                    // Show confirmation
                     copySuccess.classList.add('show');
                     setTimeout(() => copySuccess.classList.remove('show'), 2000);
                 })
                 .catch(err => {
-                    console.error('Chyba při kopírování do schránky:', err);
-                    alert('Nepodařilo se zkopírovat tabulku do schránky.');
+                    console.error('Error copying to clipboard:', err);
+                    alert('Failed to copy table to clipboard.');
                 });
         });
     </script>
