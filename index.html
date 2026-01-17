@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C123 XML Tools</title>
+
+  <!-- Google Fonts with system fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Timing Design System from GitHub Pages -->
+  <link rel="stylesheet" href="https://opencanoetiming.github.io/timing-design-system/dist/timing.min.css">
+
+  <style>
+    /* Override fonts - Google Fonts instead of self-hosted */
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-6);
+      flex: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+
+    .header h1 {
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      margin-bottom: var(--space-2);
+    }
+
+    .header p {
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+    }
+
+    .tools-grid {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .tool-card {
+      display: block;
+      padding: var(--space-5);
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      color: inherit;
+      transition: all var(--transition-normal);
+    }
+
+    .tool-card:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .tool-card h2 {
+      font-size: var(--text-xl);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+      color: var(--color-accent);
+    }
+
+    .tool-card p {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-3);
+    }
+
+    .tool-card .usage {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      opacity: 0.8;
+    }
+
+    .footer {
+      text-align: center;
+      padding: var(--space-4);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .footer a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>C123 XML Tools</h1>
+      <p>Utility tools for working with Canoe123 XML files</p>
+    </header>
+
+    <div class="tools-grid">
+      <a href="penalties-quality-analyzer/penalties-quality-analyzer.html" class="tool-card">
+        <h2>Penalties Quality Analyzer</h2>
+        <p>Analyzes quality of entered penalties in C123 XML files. Detects inconsistencies, errors, and potential issues with penalty corrections.</p>
+        <span class="usage">Drag & drop XML file to analyze</span>
+      </a>
+
+      <a href="race-combinator/canoe-race-combine.html" class="tool-card">
+        <h2>Race Combinator</h2>
+        <p>Combines multiple race XML files into one. Useful for merging results from multiple rounds, days, or different timing systems.</p>
+        <span class="usage">Upload multiple XML files to combine</span>
+      </a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>
+      Part of <a href="https://github.com/OpenCanoeTiming" target="_blank">OpenCanoeTiming</a> project |
+      <a href="https://github.com/OpenCanoeTiming/c123-xml-tools" target="_blank">Source on GitHub</a>
+    </p>
+  </footer>
+</body>
+</html>
