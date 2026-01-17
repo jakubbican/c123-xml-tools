@@ -20,7 +20,8 @@ C123 XML Tools - kolekce jednoduchých nástrojů pro práci s XML soubory syst�
 
 ## Jazyk
 
-- Komunikace a dokumentace: **čeština**
+- Komunikace s uživatelem: **čeština**
+- Dokumentace (README, docs): **angličtina**
 - Kód, komentáře, commit messages: **angličtina**
 
 ---
