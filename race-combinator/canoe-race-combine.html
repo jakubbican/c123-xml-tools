@@ -1471,11 +1471,11 @@
                                 <td>${competitor.name}</td>
                                 <td class="cell-numeric">${competitor.year || ''}</td>
                                 <td>${competitor.club || ''}</td>
-                                <td class="cell-numeric">${competitor.results[0].missing ? '999' : `${competitor.results[0].catRank}.`}</td>
+                                <td class="cell-numeric">${competitor.results[0].missing ? '999' : `${competitor.results[0].rank}.`}</td>
                                 <td class="cell-numeric">${competitor.results[0].timeFormatted}</td>
-                                <td class="cell-numeric">${competitor.results[1].missing ? '999' : `${competitor.results[1].catRank}.`}</td>
+                                <td class="cell-numeric">${competitor.results[1].missing ? '999' : `${competitor.results[1].rank}.`}</td>
                                 <td class="cell-numeric">${competitor.results[1].timeFormatted}</td>
-                                <td class="cell-numeric">${competitor.combinedCatRank}</td>
+                                <td class="cell-numeric">${competitor.combinedRank}</td>
                                 <td class="cell-numeric">${formatTime(competitor.combinedTime)}</td>
                             </tr>
                         `;
