@@ -1282,6 +1282,13 @@
 
                 // Sort age categories
                 for (const catId in ageCategoriesResults) {
+                    ageCategoriesResults[catId].competitors.sort((a, b) => {
+                        if (a.combinedCatRank !== b.combinedCatRank) {
+                            return a.combinedCatRank - b.combinedCatRank;
+                        }
+                        return a.combinedTime - b.combinedTime;
+                    });
+
                     // Add ranking within category
                     ageCategoriesResults[catId].competitors.forEach((competitor, index) => {
                         competitor.categoryRank = index + 1;
